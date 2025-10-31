@@ -1,0 +1,50 @@
+# === Compilação e build ===
+/build/
+/bin/
+/obj/
+/out/
+/dist/
+*.o
+*.obj
+*.exe
+*.dll
+*.so
+*.dylib
+*.a
+*.lib
+
+# === Arquivos temporários ===
+*.log
+*.tmp
+*.temp
+*.cache
+*.bak
+*.swp
+*.swo
+
+# === Arquivos de CMake ===
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+
+# === Configurações locais ===
+.vscode/
+.idea/
+*.user
+*.sublime-workspace
+*.sublime-project
+
+# === Dependências externas ===
+/stb_image/*.o
+/stb_image/*.obj
+
+# === Sistema operacional ===
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# === Outros ===
+*.iml
+*.out
