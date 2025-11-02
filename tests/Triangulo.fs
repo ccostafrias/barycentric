@@ -1,3 +1,5 @@
+// ESSE AQUI É O TRIANGULO BONITINHO
+
 #version 330 core
 out vec4 FragColor;
 
@@ -5,7 +7,6 @@ uniform float iTime;
 uniform vec2 iResolution;
 uniform vec4 iMouse;
 
-#define EPS  .01
 #define COL_TRI vec3(0.9, 0.3, 0.2)   // cor do triângulo
 #define COL_BG  vec3(0.1, 0.1, 0.15)  // cor de fundo
 
