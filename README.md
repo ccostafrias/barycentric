@@ -55,7 +55,7 @@ cd ..
 
 ## Objetivo
 
-Agora com o projeto configurado em mãos, o que fazer? O objetivo aqui é gerar um **triângulo** na tela utilizando **coordenadas baricêntricas** e fazê-lo reagir a estímulos do **mouse**, como mudar de cor, piscar, alterar o fundo, aplicar brilho, etc. — vai da sua imaginação! Para tal finalidade, abra o arquivo `Image.fs` e venha compreender mais um pouco da sua estrutura.
+Agora com o projeto configurado em mãos, o que fazer? O objetivo aqui é gerar um **triângulo** na tela utilizando **coordenadas baricêntricas** e fazê-lo reagir a estímulos do **mouse**, como mudar de cor, piscar, alterar o fundo, aplicar brilho, etc. — vai da sua imaginação! Para tal finalidade, abra o arquivo `Image.fs`, na pasta `Shaders`, e venha compreender mais um pouco da sua estrutura.
 
 ---
 
