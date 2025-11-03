@@ -2,9 +2,9 @@
 
 Esse repositório visa incluir os arquivo bases e instruir àqueles que pretendem realizar o EP de **MVGA**, ministrado pelo professor Helton Hideraldo Biscaro na **EACH USP**. 
 
-Desenvolvido em **OpenGL**, fazemos uso de computação gráfica para, no fim, renderizar um lindo e belo **triãngulo** na tela!
+Desenvolvido em **OpenGL**, fazemos uso de computação gráfica para, no fim, renderizar um lindo e belo **triângulo** na tela!
 
-Tal projeto foi pensado para compilar e rodar facilmente em qualquer sistema **Linux** com suporte a OpenGL 3.3 ou superior. Caso esteja usando como sistema operacional diferente, como o **Windows**, minha dica é muito simples: *mude de sistema*!
+Tal projeto foi pensado para compilar e rodar facilmente em qualquer sistema **Linux** com suporte a OpenGL 3.3 ou superior. Caso esteja usando um sistema operacional diferente, como o **Windows**, minha dica é muito simples: *mude de sistema*!
 
 ---
 
