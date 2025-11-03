@@ -115,7 +115,7 @@ Para deixar o efeito final mais interessante, há uma série de funções adicio
 
 ## Conclusão
 
-Obrigado a todos que leram até aqui! Minha intenção nada mais é que ajudar outros colegas que estão (ou estiverão) tão perdidos quanto eu.
+Obrigado a todos que leram até aqui! Minha intenção nada mais é que ajudar outros colegas que estão (ou estiveram) tão perdidos quanto eu.
 
 Se houver qualquer equívoco, sinta-se livre para mandar um `pull-request` — qualquer contribuição é bem-vinda!
 
