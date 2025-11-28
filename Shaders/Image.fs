@@ -132,11 +132,13 @@ vec3 rgb_triangle(in vec3 barycoords, float speedFactor) {
         return vec3(mix(b, a, eased), mix(c, b, eased), mix(a, c, eased));
 }
 
+// matriz de transformação para rotação
 mat2 rotateZ(float angle) {
     return mat2(cos(angle), -sin(angle),
                 sin(angle),  cos(angle));
 }
 
+// acha a menor distância de p até as retas AB, BC e CA e também modifica i como o sendo o ponto de intersecção
 float findMinDist(in vec2 a, in vec2 b, in vec2 c, in vec2 p, inout vec2 i) {
     float ab = df_line(p, a, b);
     float bc = df_line(p, b, c);
