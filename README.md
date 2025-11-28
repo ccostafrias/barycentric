@@ -75,9 +75,25 @@ Sinta-se livre para modificá-los!
 
 ### 2. Cálculo das coordenadas baricêntricas
 
-A função `bary()` (ainda **NÃO** implementada) calcula as coordenadas baricêntricas de um ponto em relação aos vértices `a, b, c`.
+A função `bary()` (ainda **NÃO** implementada) calcula as coordenadas baricêntricas de um **ponto** em relação aos vértices `a, b, c` de um triângulo.
 
-Essas coordenadas, resumidamente, indicam o quanto o ponto "pertence" a cada vértice, sendo que a **soma** dos componentes desse vetor **DEVE** ser igual a **um** (na dúvida, vale pesquisar e se aprofudnar um pouquinho mais).
+Essas coordenadas basicamente indicam o quanto cada vértice "contribui" para formar um determinado ponto (dentro ou fora) do triângulo. 
+
+Sendo um pouco mais técnico, qualquer ponto (no plano do triângulo) pode ser escrito como uma **combinação linear** dos vértices, cujos **coeficientes** são justamente as **coordenadas baricêntricas**:
+
+$(X_p, Y_p) = \alpha_1 . (X_a, Y_a) + \alpha_2 . (X_b, Y_b) + \alpha_3 . (X_c, Y_c)$
+
+onde:
+
+$\alpha_1 + \alpha_2 + \alpha_3 = 1$.
+
+Se ainda não ficou muito claro, tente imaginar o seguinte:
+- O centro do triângulo (o baricêntro) seria escrito como (0.33, 0.33, 0.33);
+- O ponto A é (1, 0, 0);
+- O ponto B é (0, 1, 0);
+- O ponto C é (0, 0, 1).
+  
+Assim, a função que iremos implementar (e que você deve quebrar a cabeça para desenvolver) devolve essas coordenadas na forma de um `vec3`.
 
 ```cpp
 vec3 bary(in vec3 a, in vec3 b, in vec3 c, in vec3 p) {
@@ -95,7 +111,7 @@ A função `test()` usa `bary()` para determinar se um ponto está dentro ou for
 bool test(in vec2 a, in vec2 b, in vec2 c, in vec2 p, inout vec3 barycoords);
 ```
 
-Além disso, a função armazena as coordenadas baricêntricas em `barycoords` — um ponteiro (até aqui eles nos perseguem)!.
+Além disso, a função armazena as coordenadas baricêntricas em `barycoords` — um ponteiro (até aqui eles nos perseguem...).
 
 ---
 
@@ -107,7 +123,7 @@ Aqui precisamos entender um breve conceito: a função `main()` passa por cada p
 FragColor = vec4(color, 1);
 ```
 
-Portanto, seu objetivo é implementar a lógica da função `bary()`, fazer uma série de testes lógicos na `main()` para decidir qual será a cor final do pixel, modificando `color`! 
+Portanto, seu objetivo é implementar a lógica da função `bary()`, fazer uma série de testes lógicos na `main()` utilizando a função `test()` para decidir qual será a cor final do pixel, modificando `color`! 
 
 Para deixar o efeito final mais interessante, há uma série de funções adicionais (disponibilizadas pelo professor) das quais você pode fazer uso, além da variável `iTime` que possibilita fazer animações (o céu é o limite!).
 
@@ -119,6 +135,6 @@ Obrigado a todos que leram até aqui! Minha intenção nada mais é que ajudar o
 
 Se houver qualquer equívoco, sinta-se livre para mandar um `pull-request` — qualquer contribuição é bem-vinda!
 
-Além disso, o shader original foi deixado na pasta `tests`, caso queira dar uma olhada e comparar.
+Além disso, o shader original foi deixado na pasta `tests` caso queira dar uma olhada e comparar.
 
 Enfim, boa sorte a todos e bons experimentos!

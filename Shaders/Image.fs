@@ -59,6 +59,9 @@ void main() {
     vec2 b = vec2(-0.85,  0.15);
     vec2 c = vec2( 0.25, -0.75);
 
+    bool isMouseInside = test(a, b, c, mouse, barycoords);
+    bool isPixelInside = test(a, b, c, pixel, barycoords);
+
     vec3 barycoords;
     vec3 finalColor = vec3(0.0);
 
