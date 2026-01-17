@@ -167,9 +167,9 @@ void main() {
     float angle = iTime * 2.0;
 
     // coords iniciais
-    vec2 iA = vec2(-side/2, -side * SQRT_3/6.0);
+    vec2 iA = vec2(-side/2.0, -side * SQRT_3/6.0);
     vec2 iB = vec2(0.0    ,  side * SQRT_3/3.0);
-    vec2 iC = vec2(side/2 , -side * SQRT_3/6.0);
+    vec2 iC = vec2(side/2.0 , -side * SQRT_3/6.0);
 
     vec2 center = vec2(0.0, 0.0);
 
