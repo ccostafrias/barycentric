@@ -1,10 +1,10 @@
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
+#include <SDL3/SDL.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 
-// === Função para ler o código fonte de um shader a partir de arquivo ===
+/** lê o arquivo do shader e devolve o código como string */
 std::string loadShaderSource(const char* filePath) {
     std::ifstream shaderFile(filePath);
     if (!shaderFile.is_open()) {
@@ -16,39 +16,37 @@ std::string loadShaderSource(const char* filePath) {
     return shaderStream.str();
 }
 
-// === Compila e linka Vertex + Fragment Shader ===
-GLuint createShaderProgram(const char* vertexPath, const char* fragmentPath) {
-    std::string vertexCode = loadShaderSource(vertexPath);
-    std::string fragmentCode = loadShaderSource(fragmentPath);
-    const char* vShaderCode = vertexCode.c_str();
-    const char* fShaderCode = fragmentCode.c_str();
+/** compila um shader (vertex ou fragment) e mostra no terminal se der erro */
+GLuint compileShader(GLenum type, const char* filePath) {
+    std::string code = loadShaderSource(filePath);
+    const char* shaderCode = code.c_str();
 
-    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vShaderCode, nullptr);
-    glCompileShader(vertexShader);
+    GLuint shader = glCreateShader(type);
+    glShaderSource(shader, 1, &shaderCode, nullptr);
+    glCompileShader(shader);
 
     GLint success;
-    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
     if (!success) {
         char infoLog[512];
-        glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
-        std::cerr << "Erro ao compilar Vertex Shader:\n" << infoLog << std::endl;
+        glGetShaderInfoLog(shader, 512, nullptr, infoLog);
+        std::cerr << "Erro ao compilar " << filePath << ":\n" << infoLog << std::endl;
     }
 
-    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fShaderCode, nullptr);
-    glCompileShader(fragmentShader);
-    glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        char infoLog[512];
-        glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
-        std::cerr << "Erro ao compilar Fragment Shader:\n" << infoLog << std::endl;
-    }
+    return shader;
+}
+
+/** compila os dois shaders e junta num programa só */
+GLuint createShaderProgram(const char* vertexPath, const char* fragmentPath) {
+    GLuint vertexShader = compileShader(GL_VERTEX_SHADER, vertexPath);
+    GLuint fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentPath);
 
     GLuint shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
+
+    GLint success;
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
     if (!success) {
         char infoLog[512];
@@ -63,26 +61,36 @@ GLuint createShaderProgram(const char* vertexPath, const char* fragmentPath) {
 }
 
 int main() {
-    // === Inicializa GLFW ===
-    if (!glfwInit()) {
-        std::cerr << "Erro ao inicializar GLFW" << std::endl;
+    // === Inicializa SDL ===
+    if (!SDL_Init(SDL_INIT_VIDEO)) {
+        std::cerr << "Erro ao inicializar SDL: " << SDL_GetError() << std::endl;
         return -1;
     }
 
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
     const int width = 800, height = 600;
-    GLFWwindow* window = glfwCreateWindow(width, height, "Image Shader", nullptr, nullptr);
+    SDL_Window* window = SDL_CreateWindow("Image Shader", width, height, SDL_WINDOW_OPENGL);
     if (!window) {
-        std::cerr << "Erro ao criar janela GLFW" << std::endl;
-        glfwTerminate();
+        std::cerr << "Erro ao criar janela SDL: " << SDL_GetError() << std::endl;
+        SDL_Quit();
         return -1;
     }
 
-    glfwMakeContextCurrent(window);
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    // cria o contexto opengl associado à janela
+    SDL_GLContext context = SDL_GL_CreateContext(window);
+    if (!context) {
+        std::cerr << "Erro ao criar contexto OpenGL: " << SDL_GetError() << std::endl;
+        SDL_Quit();
+        return -1;
+    }
+
+    // Isso ativa vsync pra poupar uso de GPU e economizar bateria dos notebooks dos estudantes, porque um programa leve assim vai rodar a milhares de fps.
+    SDL_GL_SetSwapInterval(1);
+
+    if (!gladLoadGLLoader((GLADloadproc)SDL_GL_GetProcAddress)) {
         std::cerr << "Erro ao inicializar GLAD" << std::endl;
         return -1;
     }
@@ -124,17 +132,26 @@ int main() {
     glUseProgram(shaderProgram);
 
     // === Loop principal ===
-    while (!glfwWindowShouldClose(window)) {
+    bool running = true;
+    while (running) {
+        // consome eventos e trata o fechamento
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            if (event.type == SDL_EVENT_QUIT) {
+                running = false;
+            }
+        }
+
         // Define cor de fundo
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Atualiza uniforms
-        float timeValue = glfwGetTime();
+        float timeValue = SDL_GetTicks() / 1000.0f; // milissegundos -> segundos
         int w, h;
-        glfwGetFramebufferSize(window, &w, &h);
-        double mouseX, mouseY;
-        glfwGetCursorPos(window, &mouseX, &mouseY);
+        SDL_GetWindowSizeInPixels(window, &w, &h);
+        float mouseX, mouseY;
+        SDL_GetMouseState(&mouseX, &mouseY);
 
         glUseProgram(shaderProgram);
         glUniform1f(glGetUniformLocation(shaderProgram, "iTime"), timeValue);
@@ -146,15 +163,16 @@ int main() {
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         // Atualiza a janela
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        SDL_GL_SwapWindow(window);
     }
 
     // === Limpeza ===
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
-    glfwTerminate();
+    SDL_GL_DestroyContext(context);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 
     return 0;
 }
